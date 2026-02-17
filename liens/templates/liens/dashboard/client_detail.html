@@ -1,0 +1,280 @@
+{% extends 'liens/base.html' %}
+
+{% block title %}{{ client.nom }} - DigiCards{% endblock %}
+
+{% block content %}
+<div class="container client-detail-page">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb client-breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'liens:dashboard' %}" class="client-breadcrumb-link">
+                    <i class="bi bi-house me-1"></i>Tableau de bord
+                </a>
+            </li>
+            <li class="breadcrumb-item active client-breadcrumb-active">{{ client.nom }}</li>
+        </ol>
+    </nav>
+
+    <!-- En-tête client -->
+    <div class="card client-header-card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div class="client-avatar me-3">
+                            {{ client.nom|first|upper }}
+                        </div>
+                        <div>
+                            <h1 class="client-name">{{ client.nom }}</h1>
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="client-code-badge">{{ client.code_unique }}</span>
+                                {% if client.actif %}
+                                    <span class="client-status-active">
+                                        <i class="bi bi-check-circle me-1"></i>Actif
+                                    </span>
+                                {% else %}
+                                    <span class="client-status-inactive">
+                                        <i class="bi bi-pause-circle me-1"></i>Inactif
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <small class="client-creation-date">Créé le {{ client.date_creation|date:"d/m/Y à H:i" }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="d-flex flex-column flex-md-row gap-2">
+                        <button class="btn client-btn-edit" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <i class="bi bi-pencil-square me-1"></i>Modifier le profil
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn client-btn-actions dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu client-dropdown-menu">
+                                {% if client.actif %}
+                                <li>
+                                    <a class="dropdown-item client-dropdown-item" href="{{ client.get_public_url }}" target="_blank">
+                                        <i class="bi bi-eye me-2"></i>Voir le profil public
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item client-dropdown-item" href="{% url 'liens:client_toggle_status' client.pk %}">
+                                        <i class="bi bi-pause-circle me-2"></i>Désactiver
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a class="dropdown-item client-dropdown-item" href="{% url 'liens:client_toggle_status' client.pk %}">
+                                        <i class="bi bi-play-circle me-2"></i>Activer
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li><hr class="client-dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item client-dropdown-item-danger" href="{% url 'liens:client_delete' client.pk %}">
+                                        <i class="bi bi-trash me-2"></i>Supprimer
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- URL publique -->
+        <div class="col-lg-8 mb-4">
+            {% if client.actif %}
+            <div class="card client-url-card-active">
+                <div class="card-header client-url-header-active">
+                    <h6 class="client-url-title">
+                        <i class="bi bi-link-45deg me-2"></i>URL du profil public
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="client-url-description">URL à programmer sur la carte NFC :</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control client-url-input" value="{{ public_url_absolute }}" id="publicUrl" readonly>
+                        <button class="btn client-copy-btn" type="button" onclick="copyUrl()" id="copyBtn">
+                            <i class="bi bi-clipboard"></i>
+                        </button>
+                    </div>
+                    <a href="{{ client.get_public_url }}" target="_blank" class="btn client-preview-btn">
+                        <i class="bi bi-eye me-1"></i>Prévisualiser le profil
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="card client-url-card-inactive">
+                <div class="card-header client-url-header-inactive">
+                    <h6 class="client-url-title">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Profil désactivé
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="client-inactive-description">Ce profil est désactivé et n'est pas accessible publiquement.</p>
+                    <a href="{% url 'liens:client_toggle_status' client.pk %}" class="btn client-activate-btn">
+                        <i class="bi bi-play-circle me-2"></i>Activer le profil
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Statistiques -->
+        <div class="col-lg-4 mb-4">
+            <div class="card client-stats-card">
+                <div class="card-body text-center">
+                    <div class="client-stats-number">{{ liens.count }}</div>
+                    <h6 class="client-stats-label">Lien{{ liens.count|pluralize }} configuré{{ liens.count|pluralize }}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des liens -->
+    <div class="card" style="background: #111111; border: 1px solid #374151; border-radius: 12px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 style="color: #ffffff; margin-bottom: 0; font-weight: 600;">
+                    <i class="bi bi-list me-2"></i>Liens configurés ({{ liens.count }})
+                </h5>
+                {% if liens %}
+                <a href="{% url 'liens:lien_create' client.pk %}" class="btn"
+                   style="background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); color: white; border: none; font-weight: 600; border-radius: 12px; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4); font-size: 0.875rem;">
+                    <i class="bi bi-plus-lg me-1"></i>Nouveau lien
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% if liens %}
+            <div class="table-responsive">
+                <table class="table table-hover table-dark">
+                    <thead style="background: #0a0a0a !important;">
+                        <tr>
+                            <th style="color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 0.875rem; border-color: #374151;">#</th>
+                            <th style="color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 0.875rem; border-color: #374151;">Titre</th>
+                            <th class="d-none d-md-table-cell" style="color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 0.875rem; border-color: #374151;">URL</th>
+                            <th class="d-none d-lg-table-cell" style="color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 0.875rem; border-color: #374151;">Date d'ajout</th>
+                            <th style="color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 0.875rem; border-color: #374151;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lien in liens %}
+                        <tr style="cursor: pointer; background: #111111; border-color: #374151; transition: all 0.3s ease;"
+                            onmouseover="this.style.background='#1a1a1a'; this.style.transform='scale(1.01)'"
+                            onmouseout="this.style.background='#111111'; this.style.transform='scale(1)'">
+                            <td class="text-center">
+                                <div class="client-lien-number">{{ forloop.counter }}</div>
+                            </td>
+                            <td>
+                                <div class="client-lien-title">{{ lien.titre }}</div>
+                                <div class="d-md-none">
+                                    <small class="client-lien-url-mobile">{{ lien.url|truncatechars:40 }}</small>
+                                </div>
+                            </td>
+                            <td class="d-none d-md-table-cell">
+                                <span class="client-lien-url">{{ lien.url|truncatechars:50 }}</span>
+                            </td>
+                            <td class="d-none d-lg-table-cell">
+                                <small class="client-lien-date">{{ lien.date_creation|date:"d/m/Y" }}</small>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" onclick="event.stopPropagation();">
+                                    <a href="{{ lien.url }}" target="_blank"
+                                       class="btn client-action-btn-view"
+                                       title="Ouvrir le lien">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                    <a href="{% url 'liens:lien_edit' lien.pk %}"
+                                       class="btn client-action-btn-edit"
+                                       title="Modifier le lien">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'liens:lien_delete' lien.pk %}"
+                                       class="btn client-action-btn-delete"
+                                       title="Supprimer le lien"
+                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5 client-no-links">
+                <i class="bi bi-link-45deg client-no-links-icon"></i>
+                <h5 class="mt-3 client-no-links-title">Aucun lien configuré</h5>
+                <p class="client-no-links-description">Commencez par ajouter des liens pour rendre ce profil fonctionnel.</p>
+                <a href="{% url 'liens:lien_create' client.pk %}" class="btn client-first-link-btn">
+                    <i class="bi bi-plus-lg me-2"></i>Ajouter le premier lien
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour modifier le profil -->
+<div class="modal fade client-modal" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content client-modal-content">
+            <div class="modal-header client-modal-header">
+                <h5 class="modal-title client-modal-title" id="editProfileModalLabel">
+                    <i class="bi bi-pencil-square me-2"></i>Modifier le profil
+                </h5>
+                <button type="button" class="btn-close client-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'liens:client_edit' client.pk %}">
+                <div class="modal-body client-modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="nom" class="form-label client-modal-label">Nom du client *</label>
+                        <input type="text" class="form-control client-modal-input" id="nom" name="nom" value="{{ client.nom }}" required>
+                        <div class="form-text client-modal-help">
+                            Ce nom sera affiché sur la page publique du profil.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer client-modal-footer">
+                    <button type="button" class="btn client-modal-btn-cancel" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg me-1"></i>Annuler
+                    </button>
+                    <button type="submit" class="btn client-modal-btn-save">
+                        <i class="bi bi-check-lg me-1"></i>Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyUrl() {
+    const input = document.getElementById('publicUrl');
+    const button = document.getElementById('copyBtn');
+
+    input.select();
+    navigator.clipboard.writeText(input.value).then(() => {
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="bi bi-check"></i>';
+        button.classList.remove('client-copy-btn');
+        button.classList.add('client-copy-btn-success');
+
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('client-copy-btn-success');
+            button.classList.add('client-copy-btn');
+        }, 2000);
+    });
+}
+</script>
+{% endblock %}

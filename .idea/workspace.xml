@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1e21f95b-c068-42c1-a466-a8648cda2b88" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/Digi_cards.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/static/liens/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/static/liens/icons/facebook.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/static/liens/icons/instagram.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/static/liens/icons/linkedin.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/static/liens/icons/snapchat.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/static/liens/icons/tik-tok.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/static/liens/icons/whatsapp.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/client_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/client_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/client_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/clients_table.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/dashboard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/lien_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/lien_edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/lien_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/dashboard/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/templates/liens/public/profil.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liens/urls.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="39kJKp0payXnOvuud4uJ4OP40IM" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "P:/Projet_perso/Digi_cards/liens/static/liens/icons"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="P:\Projet_perso\Digi_cards\liens\static\liens\icons" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-4e2b1448bda8-9a97661f3031-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.27397.106" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1e21f95b-c068-42c1-a466-a8648cda2b88" name="Changes" comment="" />
+      <created>1771234077709</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1771234077709</updated>
+    </task>
+    <servers />
+  </component>
+</project>

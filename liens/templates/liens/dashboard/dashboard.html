@@ -1,0 +1,202 @@
+{% extends 'liens/base.html' %}
+
+{% block title %}Tableau de bord - DigiCards{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">Tableau de bord</h1>
+            <p class="text-muted">Gestion des profils clients</p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'liens:client_create' %}" class="btn btn-primary">
+                <i class="bi bi-person-plus me-2"></i>Nouveau client
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white" id="total-clients-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0" id="total-clients-count">{{ total_clients }}</h3>
+                            <p class="mb-0">Clients total</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-people fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white" id="active-clients-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0" id="active-clients-count">{{ clients_actifs }}</h3>
+                            <p class="mb-0">Profils actifs</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-check-circle fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-white" id="inactive-clients-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0" id="inactive-clients-count">{{ clients_inactifs }}</h3>
+                            <p class="mb-0">Profils inactifs</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-pause-circle fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des clients -->
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Liste des clients</h5>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="searchInput"
+                               placeholder="Rechercher par nom ou code..."
+                               value="{{ search_query }}"
+                               autocomplete="off"
+                               data-search-url="{% url 'liens:dashboard_search' %}">
+                        {% if search_query %}
+                        <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                            <i class="bi bi-x"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" id="clients-table-container">
+            {% include 'liens/dashboard/clients_table.html' %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchUrl = searchInput.dataset.searchUrl;
+    const clearButton = document.getElementById('clearSearch');
+    const tableContainer = document.getElementById('clients-table-container');
+    let searchTimeout;
+
+    // Fonction pour effectuer la recherche AJAX
+    function performAjaxSearch() {
+        const query = searchInput.value.trim();
+
+        // Afficher un indicateur de chargement
+        tableContainer.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
+
+        // Requête AJAX
+        fetch(`${searchUrl}?search=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                // Mettre à jour le tableau
+                tableContainer.innerHTML = data.table_html;
+
+                // Mettre à jour les statistiques
+                document.getElementById('total-clients-count').textContent = data.total_clients;
+                document.getElementById('active-clients-count').textContent = data.clients_actifs;
+                document.getElementById('inactive-clients-count').textContent = data.clients_inactifs;
+
+                // Mettre à jour le bouton de suppression de recherche
+                updateClearButton(data.search_query);
+
+                // Réattacher les événements pour le nouveau contenu
+                attachClearSearchEvent();
+            })
+            .catch(error => {
+                console.error('Erreur lors de la recherche:', error);
+                tableContainer.innerHTML = '<div class="alert alert-danger">Erreur lors de la recherche. Veuillez réessayer.</div>';
+            });
+    }
+
+    // Fonction pour mettre à jour le bouton de suppression
+    function updateClearButton(searchQuery) {
+        const clearButton = document.getElementById('clearSearch');
+        if (searchQuery && !clearButton) {
+            // Ajouter le bouton de suppression s'il n'existe pas
+            const inputGroup = searchInput.parentElement;
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'btn btn-outline-secondary';
+            clearBtn.type = 'button';
+            clearBtn.id = 'clearSearch';
+            clearBtn.innerHTML = '<i class="bi bi-x"></i>';
+            inputGroup.appendChild(clearBtn);
+
+            clearBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                performAjaxSearch();
+            });
+        } else if (!searchQuery && clearButton) {
+            // Supprimer le bouton s'il n'y a pas de recherche
+            clearButton.remove();
+        }
+    }
+
+    // Fonction pour attacher l'événement au bouton "Voir tous les clients"
+    function attachClearSearchEvent() {
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                performAjaxSearch();
+            });
+        }
+    }
+
+    // Recherche automatique AJAX avec délai
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(performAjaxSearch, 300); // Délai de 300ms
+    });
+
+    // Recherche immédiate AJAX sur Entrée
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            clearTimeout(searchTimeout);
+            performAjaxSearch();
+        }
+    });
+
+    // Bouton pour effacer la recherche
+    if (clearButton) {
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            performAjaxSearch();
+        });
+    }
+
+    // Attacher les événements pour le contenu initial
+    attachClearSearchEvent();
+
+    // Focus automatique sur le champ de recherche si vide
+    if (searchInput && !searchInput.value) {
+        searchInput.focus();
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'liens/base.html' %}
+
+{% block title %}Connexion - DigiCards{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="login-page d-flex align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="login-card">
+                    <div class="login-card-header">
+                        <h3 class="mb-0">
+                            <i class="bi bi-credit-card-2-front me-2"></i>DigiCards
+                        </h3>
+                        <small>Tableau de bord gestionnaire</small>
+                    </div>
+                    <div class="login-card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="login-form-group">
+                                <label for="username" class="login-form-label">Nom d'utilisateur</label>
+                                <div class="input-group">
+                                    <span class="login-input-group-text">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+                                    <input type="text" class="login-form-control" id="username" name="username" required placeholder="Entrez votre nom d'utilisateur">
+                                </div>
+                            </div>
+
+                            <div class="login-form-group">
+                                <label for="password" class="login-form-label">Mot de passe</label>
+                                <div class="input-group">
+                                    <span class="login-input-group-text">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    <input type="password" class="login-form-control" id="password" name="password" required placeholder="Entrez votre mot de passe">
+                                    <button type="button" class="login-password-toggle" id="togglePassword" onclick="togglePasswordVisibility()">
+                                        <i class="bi bi-eye" id="toggleIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="login-btn-primary w-100">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const toggleButton = document.getElementById('togglePassword');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.className = 'bi bi-eye-slash';
+        toggleButton.setAttribute('aria-label', 'Masquer le mot de passe');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.className = 'bi bi-eye';
+        toggleButton.setAttribute('aria-label', 'Afficher le mot de passe');
+    }
+}
+
+// Accessibilité clavier
+document.getElementById('togglePassword').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        togglePasswordVisibility();
+    }
+});
+</script>
+{% endblock %}

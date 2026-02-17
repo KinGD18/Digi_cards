@@ -1,0 +1,47 @@
+{% extends 'liens/base.html' %}
+
+{% block title %}Nouveau client - DigiCards{% endblock %}
+
+{% block content %}
+<div class="container client-form-page">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card client-form-card">
+                <div class="card-header client-form-card-header">
+                    <h5>
+                        <i class="bi bi-person-plus me-2"></i>Nouveau client
+                    </h5>
+                </div>
+                <div class="card-body client-form-card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="nom" class="form-label client-form-label">Nom du client *</label>
+                            <input type="text" class="form-control client-form-control" id="nom" name="nom" required
+                                   placeholder="Ex: Jean Dupont, Entreprise ABC...">
+                            <div class="lien-form-help">
+                                <i class="bi bi-person-circle"></i>
+                                <strong>Nom du client :</strong> Ce nom sera affiché sur la page publique du profil.
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info client-alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Information :</strong> Un code unique sera généré automatiquement pour ce client.
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn client-btn-primary">
+                                <i class="bi bi-check-lg me-2"></i>Créer le client
+                            </button>
+                            <a href="{% url 'liens:dashboard' %}" class="btn client-btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
