@@ -233,11 +233,15 @@ def lien_delete(request, pk):
 
 def profil_public(request, code_unique):
     try:
-        client = Client.objects.get(code_unique=code_unique, actif=True)
+        client = Client.objects.get(code_unique=code_unique)
     except Client.DoesNotExist:
-        raise Http404("Profil non trouvé ou désactivé")
+        raise Http404("Profil non trouvé")
 
-    liens = client.lien_set.all().order_by('ordre', 'date_creation')
+    # Si le profil est inactif, on affiche quand même la page mais avec un message
+    if client.actif:
+        liens = client.lien_set.all().order_by('ordre', 'date_creation')
+    else:
+        liens = []
 
     context = {
         'client': client,

@@ -76,6 +76,8 @@ class Lien(models.Model):
             return 'liens/icons/instagram.png'
         elif 'snapchat.com' in url_lower or 'snap.com' in url_lower or 'snapchat' in url_lower:
             return 'liens/icons/snapchat.png'
+        elif 'twitter.com' in url_lower or 'x.com' in url_lower:
+            return 'liens/icons/twitter.png'
         else:
             return None
 
