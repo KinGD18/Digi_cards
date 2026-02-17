@@ -78,6 +78,8 @@ class Lien(models.Model):
             return 'liens/icons/snapchat.png'
         elif 'twitter.com' in url_lower or 'x.com' in url_lower:
             return 'liens/icons/twitter.png'
+        elif 'telegram.org' in url_lower or 't.me' in url_lower or 'telegram.me' in url_lower:
+            return 'liens/icons/telegram.png'
         else:
             return None
 
@@ -99,6 +101,8 @@ class Lien(models.Model):
             return 'Snapchat'
         elif 'twitter.com' in url_lower or 'x.com' in url_lower:
             return 'Twitter/X'
+        elif 'telegram.org' in url_lower or 't.me' in url_lower or 'telegram.me' in url_lower:
+            return 'Telegram'
         elif 'youtube.com' in url_lower or 'youtu.be' in url_lower:
             return 'YouTube'
         else:
@@ -170,5 +174,13 @@ class Lien(models.Model):
             match = re.search(r'wa\.me/(\d+)', url)
             if match:
                 return match.group(1)
+
+        # Telegram
+        elif 't.me' in url or 'telegram.me' in url:
+            match = re.search(r'(?:t\.me|telegram\.me)/([^/?]+)', url)
+            if match:
+                username = match.group(1)
+                if username not in ['joinchat', 'addstickers', 's']:
+                    return f"@{username}"
 
         return None
