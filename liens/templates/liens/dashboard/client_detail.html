@@ -144,10 +144,16 @@
                     <i class="bi bi-list me-2"></i>Liens configurés ({{ liens.count }})
                 </h5>
                 {% if liens %}
-                <a href="{% url 'liens:lien_create' client.pk %}" class="btn"
-                   style="background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); color: white; border: none; font-weight: 600; border-radius: 12px; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4); font-size: 0.875rem;">
-                    <i class="bi bi-plus-lg me-1"></i>Nouveau lien
-                </a>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'liens:lien_create' client.pk %}" class="btn"
+                       style="background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); color: white; border: none; font-weight: 600; border-radius: 12px; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4); font-size: 0.875rem;">
+                        <i class="bi bi-plus-lg me-1"></i>Nouveau lien
+                    </a>
+                    <button class="btn" data-bs-toggle="modal" data-bs-target="#addEmailModal"
+                            style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; font-weight: 600; border-radius: 12px; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4); font-size: 0.875rem;">
+                        <i class="bi bi-envelope-plus me-1"></i>Ajouter un email
+                    </button>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -217,8 +223,66 @@
                 <a href="{% url 'liens:lien_create' client.pk %}" class="btn client-first-link-btn">
                     <i class="bi bi-plus-lg me-2"></i>Ajouter le premier lien
                 </a>
+                <button class="btn mt-2" data-bs-toggle="modal" data-bs-target="#addEmailModal"
+                        style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; font-weight: 600; border-radius: 12px; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);">
+                    <i class="bi bi-envelope-plus me-2"></i>Ou ajouter un email
+                </button>
             </div>
             {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour ajouter un email -->
+<div class="modal fade client-modal" id="addEmailModal" tabindex="-1" aria-labelledby="addEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content client-modal-content">
+            <div class="modal-header client-modal-header">
+                <h5 class="modal-title client-modal-title" id="addEmailModalLabel">
+                    <i class="bi bi-envelope-plus me-2"></i>Ajouter une adresse email
+                </h5>
+                <button type="button" class="btn-close client-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'liens:lien_create' client.pk %}">
+                <div class="modal-body client-modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="email" class="form-label client-modal-label">Adresse email *</label>
+                        <input type="email" class="form-control client-modal-input" id="email" name="email" required
+                               placeholder="contact@exemple.com">
+                        <div class="form-text client-modal-help">
+                            <i class="bi bi-info-circle me-1"></i>
+                            L'adresse email sera automatiquement convertie en lien mailto: cliquable.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email_titre" class="form-label client-modal-label">Nom d'affichage *</label>
+                        <input type="text" class="form-control client-modal-input" id="email_titre" name="titre" required
+                               placeholder="Email professionnel, Contact, Support...">
+                        <div class="form-text client-modal-help">
+                            <i class="bi bi-tag me-1"></i>
+                            Ce nom sera affiché comme titre du bouton sur la page publique.
+                        </div>
+                    </div>
+
+                    <div class="alert" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; color: #d1d5db;">
+                        <i class="bi bi-lightbulb me-2" style="color: #3b82f6;"></i>
+                        <strong>Astuce :</strong> L'icône du service email (Gmail, Outlook, Yahoo) sera automatiquement détectée selon l'adresse.
+                    </div>
+
+                    <!-- Champ caché pour l'URL -->
+                    <input type="hidden" id="email_url" name="url">
+                </div>
+                <div class="modal-footer client-modal-footer">
+                    <button type="button" class="btn client-modal-btn-cancel" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg me-1"></i>Annuler
+                    </button>
+                    <button type="submit" class="btn client-modal-btn-save">
+                        <i class="bi bi-envelope-check me-1"></i>Ajouter l'email
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -276,5 +340,22 @@ function copyUrl() {
         }, 2000);
     });
 }
+
+// Gestion du modal email
+document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById('email');
+    const emailUrlInput = document.getElementById('email_url');
+
+    if (emailInput && emailUrlInput) {
+        emailInput.addEventListener('input', function() {
+            const email = this.value.trim();
+            if (email) {
+                emailUrlInput.value = 'mailto:' + email;
+            } else {
+                emailUrlInput.value = '';
+            }
+        });
+    }
+});
 </script>
 {% endblock %}
