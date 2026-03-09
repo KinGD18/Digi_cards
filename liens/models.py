@@ -80,6 +80,14 @@ class Lien(models.Model):
             return 'liens/icons/twitter.png'
         elif 'telegram.org' in url_lower or 't.me' in url_lower or 'telegram.me' in url_lower:
             return 'liens/icons/telegram.png'
+        elif url_lower.startswith('mailto:') and ('@gmail.com' in url_lower or '@googlemail.com' in url_lower):
+            return 'liens/icons/gmail.png'
+        elif url_lower.startswith('mailto:') and any(
+                domain in url_lower for domain in ['@outlook.com', '@hotmail.com', '@live.com', '@msn.com']):
+            return 'liens/icons/outlook.png'
+        elif url_lower.startswith('mailto:') and any(
+                domain in url_lower for domain in ['@yahoo.com', '@yahoo.fr', '@ymail.com', '@rocketmail.com']):
+            return 'liens/icons/yahoo.png'
         elif 'gmail.com' in url_lower or 'mail.google.com' in url_lower:
             return 'liens/icons/gmail.png'
         elif 'outlook.com' in url_lower or 'hotmail.com' in url_lower or 'live.com' in url_lower or 'office.com' in url_lower:
@@ -95,7 +103,10 @@ class Lien(models.Model):
 
         # Gestion des liens mailto:
         if url_lower.startswith('mailto:'):
-            email_address = url_lower.replace('mailto:', '').split('?')[0]
+            # Extraire l'adresse email (avant le ? s'il y en a un)
+            email_part = url_lower.replace('mailto:', '').split('?')[0]
+            email_address = email_part.strip()
+
             if '@gmail.com' in email_address or '@googlemail.com' in email_address:
                 return 'Gmail'
             elif any(domain in email_address for domain in ['@outlook.com', '@hotmail.com', '@live.com', '@msn.com']):
@@ -134,7 +145,9 @@ class Lien(models.Model):
 
         # Gestion des liens mailto:
         if url.startswith('mailto:'):
-            email_address = url.replace('mailto:', '').split('?')[0]  # Enlever les paramètres éventuels
+            # Extraire l'adresse email (avant le ? s'il y en a un pour les paramètres comme subject)
+            email_part = url.replace('mailto:', '').split('?')[0]
+            email_address = email_part.strip()
             return email_address
 
         # Instagram

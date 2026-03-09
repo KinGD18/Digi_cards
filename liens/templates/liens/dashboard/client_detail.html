@@ -269,7 +269,7 @@
 
                     <div class="alert" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; color: #d1d5db;">
                         <i class="bi bi-lightbulb me-2" style="color: #3b82f6;"></i>
-                        <strong>Astuce :</strong> L'icône sera automatiquement choisie selon le domaine de l'adresse email (Gmail, Outlook, Yahoo, etc.).
+                        <strong>Astuce :</strong> L'icône sera automatiquement choisie selon le domaine de l'adresse email (Gmail, Outlook, Yahoo, etc.). Le lien ouvrira l'application email par défaut avec le destinataire et le sujet pré-remplis.
                     </div>
 
                     <!-- Champ caché pour l'URL -->
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
         emailInput.addEventListener('input', function() {
             const email = this.value.trim();
             if (email) {
-                emailUrlInput.value = 'mailto:' + email;
+                emailUrlInput.value = 'mailto:' + email + '?subject=Contact';
             } else {
                 emailUrlInput.value = '';
             }
