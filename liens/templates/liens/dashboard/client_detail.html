@@ -351,11 +351,31 @@ document.addEventListener('DOMContentLoaded', function() {
         emailInput.addEventListener('input', function() {
             const email = this.value.trim();
             if (email) {
-                emailUrlInput.value = 'mailto:' + email + '?subject=Contact';
+                // Vérifier que l'email a un format valide avant de créer l'URL
+                if (email.includes('@') && email.includes('.')) {
+                    emailUrlInput.value = 'mailto:' + email + '?subject=Contact';
+                } else {
+                    emailUrlInput.value = '';
+                }
             } else {
                 emailUrlInput.value = '';
             }
         });
+
+        // Validation au moment de la soumission
+        const form = emailInput.closest('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const email = emailInput.value.trim();
+                if (!email || !email.includes('@') || !email.includes('.')) {
+                    e.preventDefault();
+                    alert('Veuillez saisir une adresse email valide.');
+                    return false;
+                }
+                // Régénérer l'URL au cas où
+                emailUrlInput.value = 'mailto:' + email + '?subject=Contact';
+            });
+        }
     }
 });
 </script>
