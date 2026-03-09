@@ -175,7 +175,7 @@ def lien_create(request, client_pk):
 
         if titre and url:
             # Ajouter automatiquement http:// si pas de protocole
-            if not url.startswith(('http://', 'https://')):
+            if not url.startswith(('http://', 'https://', 'mailto:')):
                 url = 'https://' + url
 
             Lien.objects.create(

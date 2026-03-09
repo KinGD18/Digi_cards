@@ -248,8 +248,9 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="email" class="form-label client-modal-label">Adresse email *</label>
-                        <input type="email" class="form-control client-modal-input" id="email" name="email" required
-                               placeholder="contact@exemple.com">
+                        <input type="email" class="form-control client-modal-input" id="email" name="url" required
+                               placeholder="contact@exemple.com"
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                         <div class="form-text client-modal-help">
                             <i class="bi bi-info-circle me-1"></i>
                             En cliquant sur ce lien, l'application de messagerie s'ouvrira avec cette adresse comme destinataire et la fenêtre de rédaction d'email.
@@ -271,9 +272,6 @@
                         <i class="bi bi-lightbulb me-2" style="color: #3b82f6;"></i>
                         <strong>Astuce :</strong> L'icône sera automatiquement choisie selon le domaine de l'adresse email (Gmail, Outlook, Yahoo, etc.). Le lien ouvrira l'application email par défaut avec le destinataire pré-rempli.
                     </div>
-
-                    <!-- Champ caché pour l'URL -->
-                    <input type="hidden" id="email_url" name="url">
                 </div>
                 <div class="modal-footer client-modal-footer">
                     <button type="button" class="btn client-modal-btn-cancel" data-bs-dismiss="modal">
