@@ -80,6 +80,12 @@ class Lien(models.Model):
             return 'liens/icons/twitter.png'
         elif 'telegram.org' in url_lower or 't.me' in url_lower or 'telegram.me' in url_lower:
             return 'liens/icons/telegram.png'
+        elif 'gmail.com' in url_lower or 'mail.google.com' in url_lower:
+            return 'liens/icons/gmail.png'
+        elif 'outlook.com' in url_lower or 'hotmail.com' in url_lower or 'live.com' in url_lower or 'office.com' in url_lower:
+            return 'liens/icons/outlook.png'
+        elif 'yahoo.com' in url_lower or 'yahoo.fr' in url_lower or 'ymail.com' in url_lower:
+            return 'liens/icons/yahoo.png'
         else:
             return None
 
@@ -182,5 +188,26 @@ class Lien(models.Model):
                 username = match.group(1)
                 if username not in ['joinchat', 'addstickers', 's']:
                     return f"@{username}"
+
+        # Gmail
+        elif 'gmail.com' in url or 'mail.google.com' in url:
+            # Extraire l'adresse email si présente dans l'URL
+            match = re.search(r'mailto:([^?&]+)', url)
+            if match:
+                return match.group(1)
+
+        # Outlook/Hotmail
+        elif 'outlook.com' in url or 'hotmail.com' in url or 'live.com' in url:
+            # Extraire l'adresse email si présente dans l'URL
+            match = re.search(r'mailto:([^?&]+)', url)
+            if match:
+                return match.group(1)
+
+        # Yahoo Mail
+        elif 'yahoo.com' in url or 'yahoo.fr' in url or 'ymail.com' in url:
+            # Extraire l'adresse email si présente dans l'URL
+            match = re.search(r'mailto:([^?&]+)', url)
+            if match:
+                return match.group(1)
 
         return None
