@@ -47,7 +47,7 @@ class Client(models.Model):
 class Lien(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name="Client")
     titre = models.CharField(max_length=100, verbose_name="Titre du lien")
-    url = models.URLField(validators=[URLValidator()], verbose_name="URL")
+    url = models.CharField(max_length=500, verbose_name="URL")
     ordre = models.PositiveIntegerField(default=0, verbose_name="Ordre d'affichage")
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
