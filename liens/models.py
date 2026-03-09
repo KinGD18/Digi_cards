@@ -93,6 +93,19 @@ class Lien(models.Model):
         """Retourne le nom de la plateforme basé sur l'URL"""
         url_lower = self.url.lower()
 
+        # Gestion des liens mailto:
+        if url_lower.startswith('mailto:'):
+            email_address = url_lower.replace('mailto:', '').split('?')[0]
+            if '@gmail.com' in email_address or '@googlemail.com' in email_address:
+                return 'Gmail'
+            elif any(domain in email_address for domain in ['@outlook.com', '@hotmail.com', '@live.com', '@msn.com']):
+                return 'Outlook'
+            elif any(
+                    domain in email_address for domain in ['@yahoo.com', '@yahoo.fr', '@ymail.com', '@rocketmail.com']):
+                return 'Yahoo Mail'
+            else:
+                return 'Email'
+
         if 'linkedin.com' in url_lower:
             return 'LinkedIn'
         elif 'facebook.com' in url_lower or 'fb.com' in url_lower:
@@ -119,8 +132,13 @@ class Lien(models.Model):
         import re
         url = self.url.lower()
 
+        # Gestion des liens mailto:
+        if url.startswith('mailto:'):
+            email_address = url.replace('mailto:', '').split('?')[0]  # Enlever les paramètres éventuels
+            return email_address
+
         # Instagram
-        if 'instagram.com' in url:
+        elif 'instagram.com' in url:
             match = re.search(r'instagram\.com/([^/?]+)', url)
             if match:
                 username = match.group(1)

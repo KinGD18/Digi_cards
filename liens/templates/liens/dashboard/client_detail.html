@@ -252,14 +252,15 @@
                                placeholder="contact@exemple.com">
                         <div class="form-text client-modal-help">
                             <i class="bi bi-info-circle me-1"></i>
-                            L'adresse email sera automatiquement convertie en lien mailto: cliquable.
+                            En cliquant sur ce lien, l'application de messagerie s'ouvrira avec cette adresse comme destinataire.
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="email_titre" class="form-label client-modal-label">Nom d'affichage *</label>
                         <input type="text" class="form-control client-modal-input" id="email_titre" name="titre" required
-                               placeholder="Email professionnel, Contact, Support...">
+                               placeholder="Email professionnel, Contact, Support..."
+                               value="Email">
                         <div class="form-text client-modal-help">
                             <i class="bi bi-tag me-1"></i>
                             Ce nom sera affiché comme titre du bouton sur la page publique.
@@ -268,7 +269,7 @@
 
                     <div class="alert" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; color: #d1d5db;">
                         <i class="bi bi-lightbulb me-2" style="color: #3b82f6;"></i>
-                        <strong>Astuce :</strong> L'icône du service email (Gmail, Outlook, Yahoo) sera automatiquement détectée selon l'adresse.
+                        <strong>Astuce :</strong> L'icône sera automatiquement choisie selon le domaine de l'adresse email (Gmail, Outlook, Yahoo, etc.).
                     </div>
 
                     <!-- Champ caché pour l'URL -->
